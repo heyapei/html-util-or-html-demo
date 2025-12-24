@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片批量填充工具</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>图片批量填充工具</h1>
+        <p class="subtitle">读取Excel数据，自动填充到图片模板的指定位置</p>
+
+        <!-- 步骤1：上传模板图片 -->
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <span class="step-title">上传模板图片</span>
+            </div>
+            <div class="upload-area" id="imageUpload">
+                <div class="upload-icon"></div>
+                <div class="upload-text">点击或拖拽上传模板图片</div>
+                <div class="upload-hint">支持 JPG、PNG 格式</div>
+            </div>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+
+        <!-- 步骤2：上传Excel -->
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <span class="step-title">上传Excel数据</span>
+            </div>
+            <div class="upload-area" id="excelUpload">
+                <div class="upload-icon"></div>
+                <div class="upload-text">点击或拖拽上传Excel文件</div>
+                <div class="upload-hint">支持 .xlsx、.xls 格式，第一行为表头</div>
+            </div>
+            <input type="file" id="excelInput" accept=".xlsx,.xls">
+            <div id="excelPreview" style="margin-top: 20px; display: none;">
+                <h4 style="margin-bottom: 10px;">📋 数据预览（前5条）</h4>
+                <div id="dataTable" style="overflow-x: auto;"></div>
+                <p id="dataCount" style="color: #666; font-size: 13px; margin-top: 10px;"></p>
+            </div>
+        </div>
+
+        <!-- 步骤3：配置填充位置 -->
+        <div class="step-card" id="configStep" style="display: none;">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <span class="step-title">配置填充位置</span>
+            </div>
+            <p style="color: #666; margin-bottom: 20px;">在图片上拖拽标记设置文字位置，或手动输入坐标</p>
+            
+            <div class="preview-container">
+                <div class="template-preview" id="templatePreview">
+                    <img id="previewImage" src="" alt="模板预览">
+                </div>
+                <div class="config-panel" id="configPanel"></div>
+            </div>
+        </div>
+
+        <!-- 步骤4：生成图片 -->
+        <div class="step-card" id="generateStep" style="display: none;">
+            <div class="step-header">
+                <span class="step-number">4</span>
+                <span class="step-title">生成图片</span>
+            </div>
+            
+            <div class="naming-config">
+                <h4 style="margin-bottom: 15px;">📝 文件命名规则</h4>
+                <div class="naming-row">
+                    <div class="naming-item">
+                        <label>文件名前缀</label>
+                        <input type="text" id="filePrefix" placeholder="例如: 证书_">
+                    </div>
+                    <div class="naming-item full-width">
+                        <label>文件名主体（可多选Excel列）</label>
+                        <div id="columnCheckboxes" class="column-checkboxes"></div>
+                    </div>
+                </div>
+                <div class="naming-row">
+                    <div class="naming-item">
+                        <label>列之间的分隔符</label>
+                        <input type="text" id="columnSeparator" value="_" placeholder="例如: _ 或 -">
+                    </div>
+                    <div class="naming-item">
+                        <label>文件名后缀</label>
+                        <input type="text" id="fileSuffix" placeholder="例如: _2024">
+                    </div>
+                    <div class="naming-item">
+                        <label>
+                            <input type="checkbox" id="addRandomSuffix"> 添加随机数防重名
+                        </label>
+                        <input type="number" id="randomLength" value="4" min="2" max="8" placeholder="随机数位数">
+                    </div>
+                </div>
+                <p class="naming-preview">预览: <span id="namingPreview">--</span>.<span id="namingExtPreview">jpg</span></p>
+            </div>
+            
+            <div class="naming-config">
+                <h4 style="margin-bottom: 15px;">🖼️ 输出设置</h4>
+                <div class="naming-row">
+                    <div class="naming-item">
+                        <label>输出格式</label>
+                        <select id="outputFormat" onchange="updateOutputSettings()">
+                            <option value="jpeg">JPEG（推荐，文件小）</option>
+                            <option value="png">PNG（无损，文件大）</option>
+                            <option value="webp">WebP（现代格式，最小）</option>
+                        </select>
+                    </div>
+                    <div class="naming-item">
+                        <label>图片质量 <span id="qualityValue">100</span>%</label>
+                        <input type="range" id="outputQuality" min="10" max="100" value="100" 
+                               oninput="document.getElementById('qualityValue').textContent = this.value; updateEstimatedSize();">
+                    </div>
+                    <div class="naming-item">
+                        <label>预估单张文件大小</label>
+                        <p id="estimatedSize" style="color: #C17F59; font-size: 14px; font-weight: 500; margin-top: 8px;">--</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="generate-btn" id="generateBtn">🚀 开始批量生成</button>
+            <div id="progressArea" style="display: none; margin-top: 20px;">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <p id="progressText" style="text-align: center; color: #666; margin-top: 10px;"></p>
+            </div>
+            <div id="resultArea" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <!-- 图片预览弹窗 -->
+    <div class="preview-modal" id="previewModal">
+        <div class="modal-overlay" onclick="closePreviewModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePreviewModal()">×</button>
+            <img id="modalImage" src="" alt="预览">
+            <div class="modal-info">
+                <span id="modalFileName"></span>
+                <button class="download-btn" id="modalDownloadBtn">下载</button>
+            </div>
+            <div class="modal-nav">
+                <button class="nav-btn" id="prevBtn" onclick="showPrevImage()">‹ 上一张</button>
+                <span id="imageCounter"></span>
+                <button class="nav-btn" id="nextBtn" onclick="showNextImage()">下一张 ›</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

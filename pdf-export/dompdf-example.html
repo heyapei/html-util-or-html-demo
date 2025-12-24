@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dompdf.js 使用示例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Han Sans SC', 'Source Han Sans CN', 'Noto Sans CJK SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-panel h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        #loading {
+            display: none;
+            margin-left: 10px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* PDF内容区域样式 */
+        #pdf-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: 30px;
+        }
+
+        .pdf-header h1 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            width: 120px;
+        }
+
+        .info-value {
+            color: #212529;
+            flex: 1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* 复杂样式演示 - 使用foreignObjectRendering */
+        .complex-box {
+            width: 100%;
+            height: 150px;
+            margin: 15px 0;
+        }
+
+        .gradient-shadow-box {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .table-container {
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #667eea;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .image-demo {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .image-demo img {
+            max-width: 200px;
+            border-radius: 8px;
+            border: 3px solid #667eea;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <h2>🎯 dompdf.js 演示控制台</h2>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generatePDF()">
+                    📄 生成PDF（无中文字体）
+                </button>
+                <button class="btn btn-primary" onclick="generatePDFWithFont()">
+                    📄 生成PDF（含中文字体）
+                </button>
+                <button class="btn btn-secondary" onclick="resetContent()">
+                    🔄 重置内容
+                </button>
+            </div>
+            <span id="loading">⏳ 正在生成PDF，请稍候...</span>
+            <div style="margin-top: 15px; padding: 10px; background: #d1ecf1; border-radius: 6px; border: 1px solid #0c5460;">
+                <strong>💡 提示：</strong>
+                <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.8;">
+                    <li>"无中文字体"版本：英文正常，中文会显示为方块（演示乱码问题）</li>
+                    <li>"含中文字体"版本：✅ 已加载思源黑体（Source Han Sans SC），中文完美显示！</li>
+                    <li>带有<code>foreignObjectRendering</code>属性的元素会以图片方式渲染（如渐变阴影框）</li>
+                    <li>思源黑体是推荐的中文字体，体积小、显示效果好</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PDF内容区域 -->
+        <div id="pdf-content">
+            <!-- 页眉 -->
+            <div class="pdf-header">
+                <h1>📋 dompdf.js 功能演示文档</h1>
+                <p>Demo Document - Generated by dompdf.js</p>
+                <p style="margin-top: 5px;">生成时间：<span id="generate-time"></span></p>
+            </div>
+
+            <!-- 基本信息 -->
+            <div class="section">
+                <h2 class="section-title">📌 基本信息</h2>
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-label">项目名称：</span>
+                        <span class="info-value">dompdf.js 使用示例</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">版本号：</span>
+                        <span class="info-value">v1.0.4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">开源协议：</span>
+                        <span class="info-value">MIT License</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">GitHub：</span>
+                        <span class="info-value">https://github.com/lmn1919/dompdf.js</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">描述：</span>
+                        <span class="info-value">将HTML转换为可编辑、非图片式、高清晰度、小体积、可打印的PDF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 核心特性 -->
+            <div class="section">
+                <h2 class="section-title">✨ 核心特性</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <div class="feature-text">纯客户端渲染<br>无需服务器支持</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">真正的PDF<br>可编辑可选中</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💾</div>
+                        <div class="feature-text">文件体积小<br>加载速度快</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-text">样式丰富<br>支持多种CSS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 复杂样式演示 -->
+            <div class="section">
+                <h2 class="section-title">🎨 复杂样式演示（foreignObjectRendering）</h2>
+                <p style="color: #666; margin-bottom: 10px;">以下元素使用foreignObjectRendering属性，会以图片方式渲染以保证效果：</p>
+                <div class="complex-box" foreignObjectRendering>
+                    <div class="gradient-shadow-box">
+                        渐变背景 + 阴影效果
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="section">
+                <h2 class="section-title">📊 数据表格示例</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>功能模块</th>
+                                <th>支持状态</th>
+                                <th>备注说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>文本渲染</td>
+                                <td>✅ 已支持</td>
+                                <td>支持字体、颜色、大小等</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>图片渲染</td>
+                                <td>✅ 已支持</td>
+                                <td>网络图片、base64、SVG</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>边框样式</td>
+                                <td>✅ 已支持</td>
+                                <td>目前仅支持实线边框</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>背景效果</td>
+                                <td>✅ 已支持</td>
+                                <td>颜色、图片、渐变</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Canvas/SVG</td>
+                                <td>✅ 已支持</td>
+                                <td>完整支持</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>iframe</td>
+                                <td>❌ 未支持</td>
+                                <td>暂不支持</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 图片示例 -->
+            <div class="section">
+                <h2 class="section-title">🖼️ 图片渲染示例</h2>
+                <div class="image-demo">
+                    <p style="color: #666; margin-bottom: 10px;">Base64 图片示例（一个简单的笑脸SVG）：</p>
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjRkZEQzAwIi8+PGNpcmNsZSBjeD0iNzAiIGN5PSI4MCIgcj0iMTAiIGZpbGw9IiMzMzMiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSI4MCIgcj0iMTAiIGZpbGw9IiMzMzMiLz48cGF0aCBkPSJNIDYwIDEyMCBRIDEwMCAxNjAgMTQwIDEyMCIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz48L3N2Zz4=" alt="笑脸图标">
+                </div>
+            </div>
+
+            <!-- 文本样式 -->
+            <div class="section">
+                <h2 class="section-title">📝 文本样式示例</h2>
+                <div class="info-card">
+                    <p style="font-size: 12px; color: #666;">小号文本 (12px)</p>
+                    <p style="font-size: 16px; color: #333;">普通文本 (16px)</p>
+                    <p style="font-size: 20px; color: #667eea; font-weight: bold;">加粗彩色文本 (20px)</p>
+                    <p style="font-size: 14px; font-style: italic; color: #6c757d;">斜体文本 (14px italic)</p>
+                    <p style="font-size: 16px; text-decoration: underline; color: #dc3545;">下划线文本</p>
+                    <p style="font-size: 16px; text-decoration: line-through; color: #6c757d;">删除线文本</p>
+                </div>
+            </div>
+
+            <!-- 页脚 -->
+            <div class="footer">
+                <p>本文档由 dompdf.js 自动生成</p>
+                <p>GitHub: https://github.com/lmn1919/dompdf.js</p>
+                <p style="margin-top: 10px;">© 2025 dompdf.js - MIT License</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入dompdf.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/dompdf.js@1.0.4/dist/dompdf.min.js"></script>
+    
+    <!-- 引入中文字体 -->
+    <script src="./res/SourceHanSansSC-Normal-Min-normal.js"></script>
+
+    <script>
+        // 更新生成时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('generate-time').textContent = timeString;
+        }
+
+        // 页面加载时更新时间
+        updateTime();
+
+        // 生成PDF（无中文字体）
+        function generatePDF() {
+            const loading = document.getElementById('loading');
+            loading.style.display = 'inline';
+            
+            // 更新时间
+            updateTime();
+
+            // 延迟一下让时间显示更新
+            setTimeout(() => {
+                dompdf(document.querySelector("#pdf-content"), {
+                    useCORS: true // 允许跨域
+                })
+                .then(function (blob) {
+                    loading.style.display = 'none';
+                    
+                    // 下载PDF
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'dompdf-demo-' + Date.now() + '.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    alert('✅ PDF生成成功！\n\n注意：由于未加载中文字体，中文可能显示为方块。');
+                })
+                .catch(function (err) {
+                    loading.style.display = 'none';
+                    console.error('PDF生成失败：', err);
+                    alert('❌ PDF生成失败：' + err.message);
+                });
+            }, 100);
+        }
+
+        // 生成PDF（含中文字体）
+        function generatePDFWithFont() {
+            // 检查字体是否已加载
+            if (!window.fontBase64) {
+                alert('❌ 错误：中文字体文件未正确加载！\n\n请确保 res/SourceHanSansSC-Normal-Min-normal.js 文件存在。');
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            loading.style.display = 'inline';
+            
+            // 更新时间
+            updateTime();
+            
+            // 延迟一下让时间显示更新
+            setTimeout(() => {
+                dompdf(document.querySelector("#pdf-content"), {
+                    useCORS: true,
+                    font: window.fontBase64
+                })
+                .then(function (blob) {
+                    loading.style.display = 'none';
+                    
+                    // 下载PDF
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'dompdf-demo-chinese-' + Date.now() + '.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    alert('✅ 带中文字体的PDF生成成功！\n\n中文字符应该可以正常显示了！');
+                })
+                .catch(function (err) {
+                    loading.style.display = 'none';
+                    console.error('PDF生成失败：', err);
+                    alert('❌ PDF生成失败：' + err.message);
+                });
+            }, 100);
+        }
+
+        // 重置内容
+        function resetContent() {
+            updateTime();
+            alert('✅ 内容已重置，时间已更新！');
+        }
+
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + P 生成PDF
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                generatePDF();
+            }
+        });
+
+        console.log('%c🎉 dompdf.js 演示页面', 'font-size: 20px; color: #667eea; font-weight: bold;');
+        console.log('%c📚 使用说明：', 'font-size: 14px; color: #333; font-weight: bold;');
+        console.log('1. 点击"生成PDF"按钮下载PDF文件');
+        console.log('2. 或使用快捷键 Ctrl/Cmd + P');
+        console.log('3. 带有foreignObjectRendering属性的元素会以图片方式渲染');
+        console.log('4. ✅ 中文字体已加载：' + (window.fontBase64 ? '成功' : '失败'));
+    </script>
+</body>
+</html>
+

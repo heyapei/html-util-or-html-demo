@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光影集 · 作品展览</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --warm-cream: #FAF7F2;
+            --warm-beige: #F5EDE4;
+            --warm-tan: #D4C4B0;
+            --warm-brown: #8B7355;
+            --warm-dark: #4A3F35;
+            --warm-gold: #C9A962;
+            --warm-terracotta: #C17F59;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: var(--warm-cream);
+            color: var(--warm-dark);
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250, 247, 242, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--warm-tan);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--warm-dark);
+            letter-spacing: 4px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--warm-brown);
+            font-size: 14px;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover { color: var(--warm-terracotta); }
+        
+        /* 英雄区域 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, var(--warm-cream) 0%, var(--warm-beige) 100%);
+            padding: 0 20px;
+        }
+        
+        .hero-subtitle {
+            font-size: 12px;
+            letter-spacing: 8px;
+            color: var(--warm-brown);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .hero-title {
+            font-size: clamp(48px, 10vw, 120px);
+            font-weight: 600;
+            color: var(--warm-dark);
+            margin-bottom: 30px;
+            line-height: 1.1;
+        }
+        
+        .hero-desc {
+            max-width: 600px;
+            color: var(--warm-brown);
+            font-size: 16px;
+            line-height: 2;
+            margin-bottom: 50px;
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--warm-tan);
+            font-size: 12px;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+</style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">光影集</div>
+        <ul class="nav-links">
+            <li><a href="#works">作品</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <p class="hero-subtitle">Photography Collection</p>
+        <h1 class="hero-title">捕捉光影<br>定格永恒</h1>
+        <p class="hero-desc">
+            每一帧画面都是时间的切片，每一束光线都是情感的载体。<br>
+            在这里，我们用镜头书写故事，用光影描绘生活。
+        </p>
+        <div class="scroll-hint">
+            <span>向下滚动</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <section class="gallery-section" id="works">
+        <div class="section-header">
+            <span class="section-tag">Featured Works</span>
+            <h2 class="section-title">精选作品</h2>
+            <p class="section-desc">光与影的诗篇，时间与空间的对话</p>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item large">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="山峦">
+                <div class="item-overlay">
+                    <span class="item-category">风光</span>
+                    <h3 class="item-title">晨曦中的山峦</h3>
+                    <p class="item-date">2024.03</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600" alt="京都">
+                <div class="item-overlay">
+                    <span class="item-category">人文</span>
+                    <h3 class="item-title">京都的午后</h3>
+                    <p class="item-date">2024.02</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1518173946687-a4c036bc3c95?w=600" alt="咖啡">
+                <div class="item-overlay">
+                    <span class="item-category">静物</span>
+                    <h3 class="item-title">咖啡时光</h3>
+                    <p class="item-date">2024.01</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="肖像">
+                <div class="item-overlay">
+                    <span class="item-category">肖像</span>
+                    <h3 class="item-title">光影肖像</h3>
+                    <p class="item-date">2023.12</p>
+                </div>
+            </div>
+            <div class="gallery-item tall">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600" alt="星空">
+                <div class="item-overlay">
+                    <span class="item-category">星空</span>
+                    <h3 class="item-title">银河之下</h3>
+                    <p class="item-date">2023.11</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600" alt="森林">
+                <div class="item-overlay">
+                    <span class="item-category">自然</span>
+                    <h3 class="item-title">迷雾森林</h3>
+                    <p class="item-date">2023.10</p>
+                </div>
+            </div>
+            <div class="gallery-item wide">
+                <img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=800" alt="海岸">
+                <div class="item-overlay">
+                    <span class="item-category">海景</span>
+                    <h3 class="item-title">黄金海岸</h3>
+                    <p class="item-date">2023.09</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600" alt="建筑">
+                <div class="item-overlay">
+                    <span class="item-category">建筑</span>
+                    <h3 class="item-title">城市几何</h3>
+                    <p class="item-date">2023.08</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section" id="about">
+        <div class="about-content">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=600" alt="摄影师">
+            </div>
+            <div class="about-text">
+                <span class="section-tag">About</span>
+                <h2 class="about-title">关于光影集</h2>
+                <p class="about-desc">
+                    光影集创立于2020年，致力于用镜头记录世界的美好瞬间。
+                    我们相信，每一张照片都承载着独特的故事，每一束光线都蕴含着无限的可能。
+                </p>
+                <p class="about-desc">
+                    从壮丽的自然风光到细腻的人文情感，从繁华的都市街景到宁静的乡村田园，
+                    我们用心捕捉生活中那些转瞬即逝的美好，将它们定格为永恒的记忆。
+                </p>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">作品收录</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">城市足迹</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">关注者</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="contact-content">
+            <span class="section-tag">Contact</span>
+            <h2 class="contact-title">联系我们</h2>
+            <p class="contact-desc">期待与您分享更多光影故事</p>
+            <a href="mailto:hello@gallery.com" class="contact-btn">hello@gallery.com</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2024 光影集 · All Rights Reserved</p>
+    </footer>
+</body>
+</html>
+
+<style>
+    /* 作品展示区 */
+    .gallery-section {
+        padding: 120px 60px;
+        background: var(--warm-cream);
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+    
+    .section-tag {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 4px;
+        color: var(--warm-terracotta);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 42px;
+        font-weight: 600;
+        color: var(--warm-dark);
+        margin-bottom: 20px;
+    }
+    
+    .section-desc {
+        color: var(--warm-brown);
+        font-size: 16px;
+    }
+    
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 300px;
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .gallery-item.large {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+    
+    .gallery-item.wide {
+        grid-column: span 2;
+    }
+    
+    .gallery-item.tall {
+        grid-row: span 2;
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    
+    .gallery-item:hover img {
+        transform: scale(1.08);
+    }
+    
+    .item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 30px;
+        background: linear-gradient(transparent, rgba(74, 63, 53, 0.9));
+        color: white;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.4s ease;
+    }
+    
+    .gallery-item:hover .item-overlay {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .item-category {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--warm-gold);
+        text-transform: uppercase;
+    }
+    
+    .item-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 8px 0;
+    }
+    
+    .item-date {
+        font-size: 12px;
+        color: var(--warm-tan);
+    }
+    
+    /* 关于区域 */
+    .about-section {
+        padding: 120px 60px;
+        background: var(--warm-beige);
+    }
+    
+    .about-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+    }
+    
+    .about-image {
+        position: relative;
+    }
+    
+    .about-image img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 30px 60px rgba(74, 63, 53, 0.2);
+    }
+    
+    .about-image::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        right: 20px;
+        bottom: 20px;
+        border: 2px solid var(--warm-tan);
+        border-radius: 8px;
+        z-index: -1;
+    }
+    
+    .about-title {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--warm-dark);
+        margin: 20px 0 30px;
+    }
+    
+    .about-desc {
+        color: var(--warm-brown);
+        font-size: 15px;
+        line-height: 2;
+        margin-bottom: 20px;
+    }
+    
+    .about-stats {
+        display: flex;
+        gap: 50px;
+        margin-top: 40px;
+        padding-top: 40px;
+        border-top: 1px solid var(--warm-tan);
+    }
+    
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .stat-number {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--warm-terracotta);
+    }
+    
+    .stat-label {
+        font-size: 13px;
+        color: var(--warm-brown);
+        letter-spacing: 1px;
+    }
+    
+    /* 联系区域 */
+    .contact-section {
+        padding: 150px 60px;
+        background: var(--warm-dark);
+        text-align: center;
+    }
+    
+    .contact-section .section-tag {
+        color: var(--warm-gold);
+    }
+    
+    .contact-title {
+        font-size: 48px;
+        font-weight: 600;
+        color: var(--warm-cream);
+        margin: 20px 0;
+    }
+    
+    .contact-desc {
+        color: var(--warm-tan);
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+    
+    .contact-btn {
+        display: inline-block;
+        padding: 18px 50px;
+        background: transparent;
+        border: 1px solid var(--warm-gold);
+        color: var(--warm-gold);
+        text-decoration: none;
+        font-size: 14px;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover {
+        background: var(--warm-gold);
+        color: var(--warm-dark);
+    }
+    
+    /* 页脚 */
+    .footer {
+        padding: 30px;
+        background: var(--warm-dark);
+        text-align: center;
+        border-top: 1px solid rgba(212, 196, 176, 0.2);
+    }
+    
+    .footer p {
+        color: var(--warm-brown);
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+    
+    /* 响应式 */
+    @media (max-width: 1024px) {
+        .gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .about-content {
+            grid-template-columns: 1fr;
+            gap: 50px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .navbar { padding: 15px 20px; }
+        .nav-links { display: none; }
+        .gallery-section, .about-section { padding: 80px 20px; }
+        .gallery-grid { grid-template-columns: 1fr; }
+        .gallery-item.large, .gallery-item.wide { grid-column: span 1; }
+        .hero-title { font-size: 36px; }
+        .about-stats { flex-direction: column; gap: 20px; }
+    }
+</style>
+
+<script>
+    // 滚动时导航栏效果
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 100) {
+            navbar.style.boxShadow = '0 2px 20px rgba(74, 63, 53, 0.1)';
+        } else {
+            navbar.style.boxShadow = 'none';
+        }
+    });
+
+    // 图片懒加载动画
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'all 0.6s ease';
+        observer.observe(item);
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>

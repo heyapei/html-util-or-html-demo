@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF导出功能完整测试用例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .header .meta {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 26px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #666;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #856404;
+        }
+
+        strong {
+            color: #d73a49;
+            font-weight: bold;
+        }
+
+        em {
+            color: #6f42c1;
+            font-style: italic;
+        }
+
+        .text-styles {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* 列表样式 */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e9ecef;
+        }
+
+        /* 代码块样式 */
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-block .keyword {
+            color: #c678dd;
+        }
+
+        .code-block .function {
+            color: #61afef;
+        }
+
+        .code-block .string {
+            color: #98c379;
+        }
+
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #e83e8c;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        /* 引用块样式 */
+        blockquote {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* 图片样式 */
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-caption {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* 提示框样式 */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            color: #856404;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            border-left: 4px solid #721c24;
+            color: #721c24;
+        }
+
+        /* 分割线 */
+        hr {
+            border: none;
+            border-top: 2px solid #e0e0e0;
+            margin: 40px 0;
+        }
+
+        /* 徽章样式 */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .badge-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 控制按钮 */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 50px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 控制按钮 -->
+    <div class="control-panel">
+        <button class="btn btn-primary" onclick="exportToPDF()">📄 导出PDF</button>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="container" id="pdf-content">
+        <!-- 文档头部 -->
+        <div class="header">
+            <h1>📚 HTML转PDF功能完整测试文档</h1>
+            <p class="subtitle">全面测试中文、图片、表格、代码、样式等各种元素的PDF导出效果</p>
+            <p class="meta">创建时间：2025-01-14 | 作者：测试团队 | 版本：v1.0.0</p>
+        </div>
+
+        <!-- 第一部分：文本样式测试 -->
+        <h2>📝 一、文本样式测试</h2>
+        
+        <p>这是一段普通的中文段落文本。dompdf.js 是一个强大的JavaScript库，可以将HTML转换为高质量的PDF文档。它支持多种文本样式、图片、表格等元素。</p>
+
+        <div class="text-styles">
+            <p>这是<strong>加粗文本</strong>，这是<em>斜体文本</em>，这是<span class="highlight">高亮文本</span>。</p>
+            <p>支持<code>内联代码</code>样式，以及各种<span style="color: #dc3545;">彩色</span><span style="color: #28a745;">文字</span><span style="color: #667eea;">显示</span>。</p>
+        </div>
+
+        <h3>1.1 段落对齐测试</h3>
+        <p style="text-align: left;">这是左对齐的文本。适合大多数正文内容的展示。</p>
+        <p style="text-align: center;">这是居中对齐的文本。适合标题或重要提示。</p>
+        <p style="text-align: right;">这是右对齐的文本。适合日期或签名。</p>
+
+        <!-- 第二部分：列表测试 -->
+        <h2>📋 二、列表测试</h2>
+
+        <h3>2.1 无序列表</h3>
+        <ul>
+            <li>支持各种文本样式和格式</li>
+            <li>支持图片渲染（网络图片、base64、SVG）</li>
+            <li>支持表格样式
+                <ul>
+                    <li>嵌套列表项 1</li>
+                    <li>嵌套列表项 2</li>
+                    <li>嵌套列表项 3</li>
+                </ul>
+            </li>
+            <li>支持代码块高亮</li>
+            <li>支持自定义CSS样式</li>
+        </ul>
+
+        <h3>2.2 有序列表</h3>
+        <ol>
+            <li>安装 dompdf.js 库</li>
+            <li>引入必要的依赖文件</li>
+            <li>配置字体（中文字体需要额外配置）</li>
+            <li>调用 dompdf() 函数
+                <ol>
+                    <li>传入目标DOM元素</li>
+                    <li>配置导出选项</li>
+                    <li>处理返回的blob对象</li>
+                </ol>
+            </li>
+            <li>下载生成的PDF文件</li>
+        </ol>
+
+        <!-- 第三部分：表格测试 -->
+        <h2>📊 三、表格测试</h2>
+
+        <h3>3.1 功能对比表</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>功能模块</th>
+                    <th>支持状态</th>
+                    <th>优先级</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>文本渲染</td>
+                    <td><span class="badge badge-success">已支持</span></td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>支持字体、颜色、大小等</td>
+                </tr>
+                <tr>
+                    <td>图片渲染</td>
+                    <td><span class="badge badge-success">已支持</span></td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>网络图片、base64、SVG</td>
+                </tr>
+                <tr>
+                    <td>表格样式</td>
+                    <td><span class="badge badge-success">已支持</span></td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>支持边框、背景色等</td>
+                </tr>
+                <tr>
+                    <td>代码块</td>
+                    <td><span class="badge badge-success">已支持</span></td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>支持语法高亮</td>
+                </tr>
+                <tr>
+                    <td>边框样式</td>
+                    <td><span class="badge badge-warning">部分支持</span></td>
+                    <td>⭐⭐⭐</td>
+                    <td>仅支持实线边框</td>
+                </tr>
+                <tr>
+                    <td>文字阴影</td>
+                    <td><span class="badge badge-danger">不支持</span></td>
+                    <td>⭐⭐</td>
+                    <td>暂不支持</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3.2 数据统计表</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>月份</th>
+                    <th>访问量</th>
+                    <th>PDF下载量</th>
+                    <th>转化率</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-10</td>
+                    <td>12,345</td>
+                    <td>1,234</td>
+                    <td>10.0%</td>
+                </tr>
+                <tr>
+                    <td>2024-11</td>
+                    <td>15,678</td>
+                    <td>1,890</td>
+                    <td>12.1%</td>
+                </tr>
+                <tr>
+                    <td>2024-12</td>
+                    <td>18,234</td>
+                    <td>2,456</td>
+                    <td>13.5%</td>
+                </tr>
+                <tr>
+                    <td>2025-01</td>
+                    <td>21,567</td>
+                    <td>3,012</td>
+                    <td>14.0%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 第四部分：图片测试 -->
+        <h2>🖼️ 四、图片测试</h2>
+
+        <h3>4.1 网络图片</h3>
+        <div class="image-container">
+            <img src="https://img2.baidu.com/it/u=4172295007,3022602453&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667" alt="测试图片1" style="max-width: 400px;">
+            <p class="image-caption">图1：网络图片渲染测试</p>
+        </div>
+
+        <h3>4.2 SVG图片（Base64）</h3>
+        <div class="image-container">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjNjY3ZWVhIi8+PGNpcmNsZSBjeD0iNzAiIGN5PSI4MCIgcj0iMTAiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSI4MCIgcj0iMTAiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNIDYwIDEyMCBRIDEwMCAxNjAgMTQwIDEyMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz48L3N2Zz4=" alt="SVG笑脸" style="max-width: 200px;">
+            <p class="image-caption">图2：SVG图片（Base64格式）</p>
+        </div>
+
+        <!-- 第五部分：代码块测试 -->
+        <h2>💻 五、代码块测试</h2>
+
+        <h3>5.1 JavaScript代码</h3>
+        <div class="code-block">
+<span class="comment">// 导出PDF函数</span>
+<span class="keyword">async function</span> <span class="function">exportToPDF</span>() {
+  <span class="keyword">const</span> element = document.<span class="function">getElementById</span>(<span class="string">'pdf-content'</span>);
+  
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> blob = <span class="keyword">await</span> <span class="function">dompdf</span>(element, {
+      useCORS: <span class="keyword">true</span>,
+      font: window.fontBase64
+    });
+    
+    <span class="comment">// 创建下载链接</span>
+    <span class="keyword">const</span> url = URL.<span class="function">createObjectURL</span>(blob);
+    <span class="keyword">const</span> a = document.<span class="function">createElement</span>(<span class="string">'a'</span>);
+    a.href = url;
+    a.download = <span class="string">'test-document.pdf'</span>;
+    a.<span class="function">click</span>();
+  } <span class="keyword">catch</span> (error) {
+    console.<span class="function">error</span>(<span class="string">'PDF生成失败:'</span>, error);
+  }
+}
+        </div>
+
+        <h3>5.2 HTML代码</h3>
+        <div class="code-block">
+<span class="comment">&lt;!-- 引入dompdf.js --&gt;</span>
+<span class="keyword">&lt;script</span> <span class="string">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/dompdf.js@1.0.4/dist/dompdf.min.js"</span><span class="keyword">&gt;&lt;/script&gt;</span>
+
+<span class="comment">&lt;!-- 引入中文字体 --&gt;</span>
+<span class="keyword">&lt;script</span> <span class="string">src</span>=<span class="string">"./res/SourceHanSansSC-Normal-Min-normal.js"</span><span class="keyword">&gt;&lt;/script&gt;</span>
+        </div>
+
+        <!-- 第六部分：提示框测试 -->
+        <h2>💡 六、提示框测试</h2>
+
+        <div class="alert alert-info">
+            <strong>ℹ️ 信息提示：</strong> 这是一个信息提示框，用于展示普通的提示信息。
+        </div>
+
+        <div class="alert alert-success">
+            <strong>✅ 成功提示：</strong> PDF导出成功！文件已保存到本地下载目录。
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>⚠️ 警告提示：</strong> 中文字体较大（约7MB），首次加载可能需要较长时间。
+        </div>
+
+        <div class="alert alert-danger">
+            <strong>❌ 错误提示：</strong> PDF生成失败，请检查网络连接和字体文件是否正确加载。
+        </div>
+
+        <!-- 第七部分：引用块测试 -->
+        <h2>💬 七、引用块测试</h2>
+
+        <blockquote>
+            "dompdf.js 是一个革命性的工具，它让前端开发者能够轻松地将网页内容转换为高质量的PDF文档，无需依赖后端服务。"
+            <br><br>
+            —— 前端技术专家
+        </blockquote>
+
+        <blockquote>
+            思源黑体（Source Han Sans）是Adobe与Google合作开发的开源字体家族，专为中日韩文字设计，字形美观、体积适中，是中文PDF导出的最佳选择。
+        </blockquote>
+
+        <!-- 第八部分：卡片测试 -->
+        <h2>🎴 八、卡片样式测试</h2>
+
+        <div class="card">
+            <div class="card-title">功能特性</div>
+            <p>✨ <strong>纯客户端处理：</strong>所有转换都在浏览器中完成，无需服务器支持。</p>
+            <p>📱 <strong>跨平台兼容：</strong>支持Chrome、Firefox、Safari、Edge等主流浏览器。</p>
+            <p>🎨 <strong>样式保留：</strong>最大程度保留原始HTML的样式和布局。</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">使用场景</div>
+            <ul>
+                <li>报表导出：将数据报表导出为PDF格式</li>
+                <li>简历生成：在线简历编辑器导出PDF</li>
+                <li>文档归档：将网页内容保存为PDF文档</li>
+                <li>票据打印：电子发票、订单等打印预览</li>
+            </ul>
+        </div>
+
+        <!-- 第九部分：复杂布局测试 -->
+        <h2>🎯 九、复杂布局测试</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+            <div class="card">
+                <div class="card-title">优势</div>
+                <ul style="padding-left: 20px;">
+                    <li>✅ 真正的PDF文件</li>
+                    <li>✅ 文件体积小</li>
+                    <li>✅ 支持文字选择</li>
+                    <li>✅ 打印质量高</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">注意事项</div>
+                <ul style="padding-left: 20px;">
+                    <li>⚠️ 部分CSS不支持</li>
+                    <li>⚠️ 需要字体文件</li>
+                    <li>⚠️ 大文件慢</li>
+                    <li>⚠️ 复杂样式可能失真</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 分割线 -->
+        <hr>
+
+        <!-- 第十部分：徽章和标签 -->
+        <h2>🏷️ 十、徽章和标签测试</h2>
+
+        <p>
+            技术栈：
+            <span class="badge badge-primary">JavaScript</span>
+            <span class="badge badge-primary">HTML5</span>
+            <span class="badge badge-primary">CSS3</span>
+        </p>
+
+        <p>
+            状态标签：
+            <span class="badge badge-success">已完成</span>
+            <span class="badge badge-warning">进行中</span>
+            <span class="badge badge-danger">未开始</span>
+        </p>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p><strong>测试文档生成完成</strong></p>
+            <p>© 2025 dompdf.js 测试团队 | 版本 v1.0.0</p>
+            <p>本文档用于全面测试HTML转PDF功能，包含各种常见元素和样式</p>
+        </div>
+    </div>
+
+    <!-- 引入dompdf.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/dompdf.js@1.0.4/dist/dompdf.min.js"></script>
+    
+    <!-- 引入中文字体 -->
+    <script src="./res/SourceHanSansSC-Normal-Min-normal.js"></script>
+
+    <script>
+        // 导出PDF函数
+        async function exportToPDF() {
+            // 检查字体是否加载
+            if (!window.fontBase64) {
+                alert('❌ 错误：中文字体文件未加载！\n\n请确保 res/SourceHanSansSC-Normal-Min-normal.js 文件存在。');
+                return;
+            }
+
+            const element = document.getElementById('pdf-content');
+            const btn = document.querySelector('.btn-primary');
+            
+            // 显示加载状态
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ 正在生成PDF...';
+            btn.disabled = true;
+
+            try {
+                const blob = await dompdf(element, {
+                    useCORS: true,
+                    font: window.fontBase64,
+                scale: 1,
+                fontConfig: {
+                    fontFamily: 'SourceHanSansSC-Normal-Min',
+                    fontBase64: window.fontBase64,
+                    fontUrl: '',
+                    fontWeight: 400,
+                    fontStyle: 'normal'
+                }
+                });
+
+                // 创建下载链接
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'pdf-export-test-' + Date.now() + '.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // 恢复按钮状态
+                btn.textContent = originalText;
+                btn.disabled = false;
+
+                alert('✅ PDF生成成功！\n\n文件已保存到下载目录。');
+            } catch (error) {
+                // 恢复按钮状态
+                btn.textContent = originalText;
+                btn.disabled = false;
+
+                console.error('PDF生成失败：', error);
+                alert('❌ PDF生成失败：\n\n' + error.message);
+            }
+        }
+
+        // 页面加载完成提示
+        window.addEventListener('load', function() {
+            console.log('%c📄 PDF导出测试页面', 'font-size: 20px; color: #667eea; font-weight: bold;');
+            console.log('%c✅ 页面加载完成', 'font-size: 14px; color: #28a745;');
+            console.log('%c🔤 中文字体状态:', window.fontBase64 ? '已加载' : '未加载', 'font-size: 14px;');
+            console.log('%c💡 点击右上角按钮导出PDF', 'font-size: 14px; color: #666;');
+        });
+    </script>
+</body>
+</html>
+
